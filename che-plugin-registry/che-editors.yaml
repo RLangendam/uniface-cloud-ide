@@ -1,0 +1,373 @@
+version: 1.0.0
+editors:
+  - id: eclipse/che-theia/next
+    title: Eclipse Theia development version.
+    displayName: theia-ide
+    description: Eclipse Theia, get the latest release each day.
+    icon: https://raw.githubusercontent.com/theia-ide/theia/master/logo/theia-logo-no-text-black.svg?sanitize=true
+    repository: https://github.com/eclipse-che/che-theia
+    firstPublicationDate: "2019-03-07"
+    endpoints:
+      - name: "theia"
+        public: true
+        targetPort: 3100
+        attributes:
+          protocol: http
+          type: ide
+          secure: true
+          cookiesAuthEnabled: true
+          discoverable: false
+      - name: "webviews"
+        public: true
+        targetPort: 3100
+        attributes:
+          protocol: http
+          type: webview
+          secure: true
+          cookiesAuthEnabled: true
+          discoverable: false
+          unique: true
+      - name: "mini-browser"
+        public: true
+        targetPort: 3100
+        attributes:
+          protocol: http
+          type: mini-browser
+          secure: true
+          cookiesAuthEnabled: true
+          discoverable: false
+          unique: true
+      - name: "theia-dev"
+        public: true
+        targetPort: 3130
+        attributes:
+          protocol: http
+          type: ide-dev
+          discoverable: false
+      - name: "theia-redirect-1"
+        public: true
+        targetPort: 13131
+        attributes:
+          protocol: http
+          discoverable: false
+      - name: "theia-redirect-2"
+        public: true
+        targetPort: 13132
+        attributes:
+          protocol: http
+          discoverable: false
+      - name: "theia-redirect-3"
+        public: true
+        targetPort: 13133
+        attributes:
+          protocol: http
+          discoverable: false
+      - name: terminal
+        public: true
+        targetPort: 3333
+        attributes:
+          protocol: ws
+          type: collocated-terminal
+          discoverable: false
+          secure: true
+          cookiesAuthEnabled: true
+    containers:
+      - name: theia-ide
+        image: "uniface/uniface-che:next"
+        env:
+          - name: THEIA_PLUGINS
+            value: local-dir:///plugins
+          - name: HOSTED_PLUGIN_HOSTNAME
+            value: 0.0.0.0
+          - name: HOSTED_PLUGIN_PORT
+            value: "3130"
+          - name: THEIA_HOST
+            value: 127.0.0.1
+        volumeMounts:
+          - name: plugins
+            path: "/plugins"
+          - name: theia-local
+            path: "/home/theia/.theia"
+        mountSources: true
+        ports:
+          - exposedPort: 3100
+          - exposedPort: 3130
+          - exposedPort: 13131
+          - exposedPort: 13132
+          - exposedPort: 13133
+        memoryLimit: "512M"
+        cpuLimit: 1500m
+        cpuRequest: 100m
+      - name: che-machine-exec
+        image: 'quay.io/eclipse/che-machine-exec:nightly'
+        ports:
+          - exposedPort: 3333
+        command:
+          - /go/bin/che-machine-exec
+          - '--url'
+          - '127.0.0.1:3333'
+    initContainers:
+      - name: remote-runtime-injector
+        image: "quay.io/eclipse/che-theia-endpoint-runtime-binary:next"
+        volumeMounts:
+          - name: remote-endpoint
+            path: "/remote-endpoint"
+            ephemeral: true
+        env:
+          - name: PLUGIN_REMOTE_ENDPOINT_EXECUTABLE
+            value: /remote-endpoint/plugin-remote-endpoint
+          - name: REMOTE_ENDPOINT_VOLUME_NAME
+            value: remote-endpoint
+  - id: eclipse/che-theia/7.29.2
+    title: Eclipse Theia
+    displayName: theia-ide
+    description: Eclipse Theia
+    icon: https://raw.githubusercontent.com/theia-ide/theia/master/logo/theia-logo-no-text-black.svg?sanitize=true
+    repository: https://github.com/eclipse-che/che-theia
+    firstPublicationDate: "2019-03-07"
+    endpoints:
+      - name: "theia"
+        public: true
+        targetPort: 3100
+        attributes:
+          protocol: http
+          type: ide
+          secure: true
+          cookiesAuthEnabled: true
+          discoverable: false
+      - name: "webviews"
+        public: true
+        targetPort: 3100
+        attributes:
+          protocol: http
+          type: webview
+          secure: true
+          cookiesAuthEnabled: true
+          discoverable: false
+          unique: true
+      - name: "mini-browser"
+        public: true
+        targetPort: 3100
+        attributes:
+          protocol: http
+          type: mini-browser
+          secure: true
+          cookiesAuthEnabled: true
+          discoverable: false
+          unique: true
+      - name: "theia-dev"
+        public: true
+        targetPort: 3130
+        attributes:
+          protocol: http
+          type: ide-dev
+          discoverable: false
+      - name: "theia-redirect-1"
+        public: true
+        targetPort: 13131
+        attributes:
+          protocol: http
+          discoverable: false
+      - name: "theia-redirect-2"
+        public: true
+        targetPort: 13132
+        attributes:
+          protocol: http
+          discoverable: false
+      - name: "theia-redirect-3"
+        public: true
+        targetPort: 13133
+        attributes:
+          protocol: http
+          discoverable: false
+      - name: terminal
+        public: true
+        targetPort: 3333
+        attributes:
+          protocol: ws
+          type: collocated-terminal
+          discoverable: false
+          secure: true
+          cookiesAuthEnabled: true
+    containers:
+      - name: theia-ide
+        image: "quay.io/eclipse/che-theia:7.29.2"
+        env:
+          - name: THEIA_PLUGINS
+            value: local-dir:///plugins
+          - name: HOSTED_PLUGIN_HOSTNAME
+            value: 0.0.0.0
+          - name: HOSTED_PLUGIN_PORT
+            value: "3130"
+          - name: THEIA_HOST
+            value: 127.0.0.1
+        volumeMounts:
+          - name: plugins
+            path: "/plugins"
+          - name: theia-local
+            path: "/home/theia/.theia"
+        mountSources: true
+        ports:
+          - exposedPort: 3100
+          - exposedPort: 3130
+          - exposedPort: 13131
+          - exposedPort: 13132
+          - exposedPort: 13133
+        memoryLimit: "512M"
+      - name: che-machine-exec
+        image: 'quay.io/eclipse/che-machine-exec:7.29.2'
+        ports:
+          - exposedPort: 3333
+        command:
+          - /go/bin/che-machine-exec
+          - '--url'
+          - '127.0.0.1:3333'
+    initContainers:
+      - name: remote-runtime-injector
+        image: "quay.io/eclipse/che-theia-endpoint-runtime-binary:7.29.2"
+        volumeMounts:
+          - name: remote-endpoint
+            path: "/remote-endpoint"
+            ephemeral: true
+        env:
+          - name: PLUGIN_REMOTE_ENDPOINT_EXECUTABLE
+            value: /remote-endpoint/plugin-remote-endpoint
+          - name: REMOTE_ENDPOINT_VOLUME_NAME
+            value: remote-endpoint
+  - id: ws-skeleton/jupyter/5.7.0
+    title: Jupyter Notebook as Editor for Eclipse Che
+    displayName: Jupyter Notebook
+    description: Jupyter Notebook as Editor for Eclipse Che
+    icon: https://jupyter.org/assets/main-logo.svg
+    repository: https://github.com/ws-skeleton/che-editor-jupyter/
+    firstPublicationDate: "2019-02-05"
+    endpoints:
+      - name: "jupyter"
+        public: true
+        targetPort: 8888
+        attributes:
+          protocol: http
+          type: ide
+    containers:
+      - name: jupyter-notebook
+        image: "docker.io/ksmster/che-editor-jupyter:5.7.0"
+        env:
+          - name: JUPYTER_NOTEBOOK_DIR
+            value: /projects
+        mountSources: true
+        ports:
+         - exposedPort: 8888
+        memoryLimit: "512M"
+  - id: dirigiblelabs/dirigible/3.4.0
+    title: Eclipse Dirigible for Eclipse Che
+    displayName: Eclipse Dirigible
+    description: Eclipse Dirigible as App Development Platform for Eclipse Che
+    icon: https://www.dirigible.io/img/dirigible.svg
+    repository: https://github.com/dirigiblelabs/dirigible-che-editor-plugin/
+    firstPublicationDate: "2019-02-05"
+    endpoints:
+      - name: "dirigible"
+        public: true
+        targetPort: 8080
+        attributes:
+          protocol: http
+          type: ide
+    containers:
+      - name: eclipse-dirigible
+        image: "docker.io/dirigiblelabs/dirigible-openshift:3.4.0"
+        env:
+          - name: DIRIGIBLE_DATABASE_PROVIDER
+            value: "local"
+          - name: DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER
+            value: /projects/dirigible/repository
+          - name: DIRIGIBLE_REPOSITORY_LOCAL_ROOT_FOLDER_IS_ABSOLUTE
+            value: "true"
+          - name: DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER
+            value: /projects/dirigible/repository
+          - name: DIRIGIBLE_REPOSITORY_SEARCH_ROOT_FOLDER_IS_ABSOLUTE
+            value: "true"
+          - name: DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER
+            value: /projects/dirigible/cms
+          - name: DIRIGIBLE_CMS_INTERNAL_ROOT_FOLDER_IS_ABSOLUTE
+            value: "true"
+          - name: DIRIGIBLE_DATABASE_H2_ROOT_FOLDER_DEFAULT
+            value: /projects/dirigible/h2
+          - name: DIRIGIBLE_DATABASE_H2_URL
+            value: jdbc:h2:/projects/dirigible/h2
+          - name: DIRIGIBLE_OPERATIONS_LOGS_ROOT_FOLDER_DEFAULT
+            value: /usr/local/tomcat/logs
+        ports:
+          - exposedPort: 8080            
+        mountSources: true
+        memoryLimit: "1024M"
+  - id: che-incubator/intellij-community/2020.2.2
+    title:  IntelliJ IDEA Community Edition (in browser using noVNC) as editor for Eclipse Che
+    displayName:  IntelliJ IDEA Community Edition
+    description:  IntelliJ IDEA Community Edition running on the Web with noVNC
+    icon: https://resources.jetbrains.com/storage/products/intellij-idea/img/meta/intellij-idea_logo_300x300.png
+    repository: https://github.com/che-incubator/che-editor-intellij-community
+    firstPublicationDate: "2020-09-29"
+    endpoints:
+      - name: "intellij"
+        public: true
+        targetPort: 8080
+        attributes:
+          protocol: http
+          type: ide
+          discoverable: false
+          path: /vnc.html?resize=remote&autoconnect=true&reconnect=true
+    containers:
+      - name: intellij-novnc
+        image: "quay.io/che-incubator/che-editor-intellij-community:2020.2-cdc002c"
+        mountSources: true
+        volumeMounts:
+          - name: idea-configuration
+            path: "/JetBrains/IdeaIC"
+        ports:
+         - exposedPort: 8080
+        memoryLimit: "2048M"
+  - id: ws-skeleton/eclipseide/4.9.0
+    displayName: Eclipse IDE
+    description: Eclipse running on the Web with Broadway
+    title: Eclipse IDE (in browser using Broadway) as editor for Eclipse Che
+    icon: https://cdn.freebiesupply.com/logos/large/2x/eclipse-11-logo-svg-vector.svg
+    repository: https://github.com/ws-skeleton/che-editor-eclipseide/
+    firstPublicationDate: "2019-02-05"
+    endpoints:
+      - name: "eclipse-ide"
+        public: true
+        targetPort: 5000
+        attributes:
+          protocol: http
+          type: ide
+    containers:
+      - name: eclipse-ide
+        image: "docker.io/wsskeleton/eclipse-broadway"
+        mountSources: true
+        ports:
+          - exposedPort: 5000
+        memoryLimit: "2048M"
+  - id: cdr/code-server/3.6.2
+    title: Visual Studio Code - Web (code-server)
+    displayName: code-server
+    description: An open source distribution of Visual Studio Code as a cloud IDE
+    icon: https://raw.githubusercontent.com/sr229/discord-open-source/master/logos/code-server.svg 
+    repository: https://github.com/cdr/code-server
+    firstPublicationDate: "2020-11-03"
+    endpoints:
+      - name: "code-server"
+        public: true
+        targetPort: 8080
+        attributes:
+          protocol: http
+          type: ide
+    containers:
+      - name: code-server
+        image: "codercom/code-server:3.6.2"
+        mountSources: true
+        memoryLimit: "1024M"
+        ports:
+         - exposedPort: 8080
+        volumeMounts:
+          - name: 'user-data'
+            path: '/home/coder/.local/share/code-server'

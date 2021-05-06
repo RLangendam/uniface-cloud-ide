@@ -1,0 +1,22 @@
+{
+    "name": "Uniface Workspaces",
+    "icon": "uniface_icon.png",
+    "logo": {
+        "dark": "uniface_rocket.png",
+        "light": "uniface_rocket.png"
+    },
+    "welcome": {
+        "title": "Welcome to Your Workspace",
+        "links": ["https://www.uniface.com/", "https://documentation.uniface.com/10/uniface/gettingStarted/gettingStarted.htm"]
+    },
+    "links": {
+        "website": {
+            "name": "Discover Uniface SaaS solutions",
+            "url": "https://www.uniface.com/landing/developer"
+        },
+        "documentation": {
+            "name": "Browse Documentation",
+            "url": "https://documentation.uniface.com/10/uniface/gettingStarted/gettingStarted.htm"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+apiVersion: 1.0.0
+metadata:
+  name: uniface
+projects:
+  - source:
+      type: git
+      location: url-to-uniface-seed-project
+    name: uniface-seed-project
+components:
+  - alias: uniface-dev-env
+    type: dockerimage
+    image: uniface-dev-env
+    memoryLimit: 512M
+    mountSources: true
+    command:
+      - tail
+    args:
+      - '-f'
+      - /dev/null
+  - type: chePlugin
+    id: uniface/procscript/latest
+  - type: cheEditor
+    reference: url-to-custom-meta.yaml
+    
