@@ -20,6 +20,10 @@ Make sure to have Kubernetes enabled in your docker settings and use [WSL2](http
 
     Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://www.eclipse.org/che/chectl/win/'))
 
+There's a bug in `chectl` currently which puts you on the `next` channel. Make sure you're on the stable channel by running
+
+    chectl update stable
+
 ## Run
 
     chectl server:deploy --platform=docker-desktop --installer=helm
@@ -31,6 +35,19 @@ Your Che environment should now be up an running within your local Docker deskto
 You may now create a new workspace from a devfile or the templates provided.
 
 See also, [Running Eclipse Che on Kubernetes using Docker Desktop on macOS or Windows](https://medium.com/eclipse-che-blog/running-eclipse-che-on-kubernetes-using-docker-desktop-for-mac-5d972ed511e1)
+
+### Self-signed certificate issues
+
+In case the instructions on [Importing certificates to browsers](https://www.eclipse.org/che/docs/che-7/end-user-guide/importing-certificates-to-browsers/) don't work for you you can disable SSL verfication alltogether during development.
+
+#### Chrome
+Close all Chrome sessions and run
+
+    "C:\Program Files\Google\Chrome\Application\chrome.exe" --ignore-certificate-errors
+
+You can check it's ignoring certificates if there's a status bar displaying
+
+> You are using an unsupported command-line flag: --ignore-certficate-errors. Stability and security will suffer.
 
 ## WIP: Build & Run with custom branding
 
